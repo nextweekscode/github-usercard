@@ -1,3 +1,7 @@
+import axios from 'axios'
+
+
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -28,7 +32,11 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [   'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell'];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -58,3 +66,63 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+const gitHubURL = `https://api.github.com/users/nextweekscode`	
+	const entryPoint = document.querySelector('.cards')
+	function makeCard(dataObj) {
+	const card = document.createElement('div')
+	card.className = 'card'
+	entryPoint.appendChild(card)
+	const image = document.createElement('img')
+	image.src = dataObj.data.avatar_url
+	card.appendChild(image)
+	const cardInfo = document.createElement('div')
+	cardInfo.className = 'card-info'
+	card.appendChild(cardInfo)
+	const name = document.createElement('h3')
+	name.className = "name"
+	name.textContent = dataObj.data.name
+	cardInfo.appendChild(name)
+	const gitHubName = document.createElement('p')
+	gitHubName.className = "username"
+	gitHubName.textContent = dataObj.data.login
+	cardInfo.appendChild(gitHubName)
+	const location = document.createElement('p')
+	location.textContent = `Location: ${dataObj.data.location}`
+	cardInfo.appendChild(location)
+	const profile = document.createElement('p')
+	profile.textContent = "Profile:"
+	cardInfo.appendChild(profile)
+	const profileLink = document.createElement('a')
+	profileLink.href = dataObj.data.html_url
+	profileLink.textContent = dataObj.data.html_url
+	profile.appendChild(profileLink)
+	const followers = document.createElement('p')
+	followers.textContent = `Followers: ${dataObj.data.followers}`
+	cardInfo.appendChild(followers)
+	const following = document.createElement('p')
+	following.textContent = `Following: ${dataObj.data.following}`
+	cardInfo.appendChild(following)
+	const userBio = document.createElement('p')
+	userBio.textContent = `Bio: ${dataObj.data.bio}`
+	cardInfo.appendChild(userBio)
+	return card
+	}
+	axios.get(gitHubURL)
+	.then( (response) => {
+	entryPoint.appendChild(makeCard(response))
+	console.log('success')
+	})
+	.catch(()=>{
+	console.log('error')
+	})
+	followersArray.forEach(user => {
+	axios.get(`https://api.github.com/users/${user}`)
+	.then((response) =>{
+	entryPoint.appendChild(makeCard(response))
+	console.log('success')
+	} )
+	.catch(() => {
+	console.log('error')
+	})
+	})
