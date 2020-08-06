@@ -109,20 +109,23 @@ const gitHubURL = `https://api.github.com/users/nextweekscode`
 	return card
 	}
 	axios.get(gitHubURL)
-	.then( (response) => {
-	entryPoint.appendChild(makeCard(response))
-	console.log('success')
-	})
+	.then(res => {
+	entryPoint.appendChild(makeCard(res))
+	
+  })
+  .then(response => {
+    followersArray.forEach(user => {
+    axios.get(`https://api.github.com/users/${user}`)
+    .then((res) =>{
+    entryPoint.appendChild(makeCard(res))
+    
+    } )
+    .catch(() => {
+    console.log('error')
+    })
+    })
+
+  })
 	.catch(()=>{
 	console.log('error')
-	})
-	followersArray.forEach(user => {
-	axios.get(`https://api.github.com/users/${user}`)
-	.then((response) =>{
-	entryPoint.appendChild(makeCard(response))
-	console.log('success')
-	} )
-	.catch(() => {
-	console.log('error')
-	})
 	})
